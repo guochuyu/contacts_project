@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .add-button {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            width: 30px; /* 调整按钮宽度 */
+            height: 30px; /* 调整按钮高度 */
+            border-radius: 50%;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px; /* 调整按钮文字大小 */
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .add-button:hover {
+            background-color: #218838;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            padding: 15px 20px;
+            border-bottom: 1px solid #dee2e6;
+            transition: background-color 0.3s;
+            cursor: pointer;
+            position: relative; /* 添加此行 */
+        }
+
+        li:hover {
+            background-color: #f1f1f1;
+        }
+
+        .details {
+            padding: 20px;
+            background-color: #f1f1f1;
+            border-radius: 10px;
+            position: absolute;
+            top: 0;
+            left: calc(100% + 20px); /* 改变这里的位置 */
+            width: 300px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: opacity 0.3s, left 0.3s; /* 添加 left 过渡 */
+            opacity: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        li:hover .details {
+            opacity: 1;
+            pointer-events: auto;
+            left: calc(100% + 10px); /* 改变这里的位置 */
+        }
+
+        .details p {
+            margin: 10px 0;
+        }
+
+        .user-status {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            text-align: right;
+            position: fixed;
+            top: 0;
+            right: 0;
+            z-index: 9999;
+        }
+
+        .user-status a {
+            color: white;
+            text-decoration: none;
+            margin-left: 10px;
+        }
+
+        .user-status a:hover {
+            text-decoration: underline;
+        }
+
+        .buttons {
+            display: none;
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+        }
+
+        .contact-item:hover .buttons {
+            display: flex;
+        }
+
+        .edit-button, .delete-button {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, opacity 0.3s; /* 添加 opacity 过渡 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            border: none;
+            opacity: 0.6; /* 初始透明度 */
+        }
+
+        .edit-button {
+            background-color: rgba(128, 0, 128, 0.6); /* 初始颜色 */
+        }
+
+        .delete-button {
+            background-color: rgba(255, 0, 0, 0.6); /* 初始颜色 */
+            position: relative;
+        }
+
+        .delete-button::before {
+            content: '-';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .edit-button:hover, .delete-button:hover {
+            opacity: 1; /* 悬停时不透明 */
+        }
+
+        .contact-item:hover .edit-button {
+            background-color: rgba(128, 0, 128, 1); /* 悬停时颜色 */
+        }
+
+        .contact-item:hover .delete-button {
+            background-color: rgba(255, 0, 0, 1); /* 悬停时颜色 */
+        }
+
+        .search-form {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .search-form input[type="text"] {
+            width: 100%;
+            max-width: 400px;
+            padding: 10px;
+            border-radius: 5px 0 0 5px;
+            border: 1px solid #ccc;
+        }
+
+        .search-form button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 0 5px 5px 0;
+            transition: background-color 0.3s;
+        }
+
+        .search-form button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script>
+        function confirmDelete(event, deleteUrl) {
+            event.preventDefault();
+            if (confirm('你确定要删除该联系人吗?')) {
+                window.location.href = deleteUrl;
+            }
+        }
+    </script>
+</head>
+<body>
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="header">
+        <h1>Contact List</h1>
+        <a href="{% url 'add_contact' %}" class="add-button">+</a>
+    </div>
+    <form class="search-form" action="{% url 'search_results' %}" method="get">
+        <input type="text" name="query" placeholder="Search contacts...">
+        <button type="submit">Search</button>
+    </form>
+    <ul>
+        {% for contact in contacts %}
+        <li class="contact-item">
+            {{ contact.name }} - {{ contact.phone_number }}
+            <div class="buttons">
+                <a href="{% url 'edit_contact' contact.id %}" class="edit-button">+</a>
+                <a href="#" class="delete-button" onclick="confirmDelete(event, '{% url 'delete_contact' contact.id %}')"></a>
+            </div>
+            <div class="details">
+                <h2>Contact Details</h2>
+                <p><strong>Name:</strong> {{ contact.name }}</p>
+                <p><strong>Phone Number:</strong> {{ contact.phone_number }}</p>
+                <p><strong>Email:</strong> {{ contact.email }}</p>
+            </div>
+        </li>
+        {% empty %}
+        <li>No contacts yet.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
+</body>
+</html>

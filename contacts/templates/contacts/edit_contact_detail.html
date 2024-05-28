@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Contact</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            position: relative;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto; /* 居中对齐 */
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .home-link {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 14px;
+        }
+        .home-link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .home-link a:hover {
+            text-decoration: underline;
+        }
+                .user-status {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            text-align: right;
+            position: fixed;
+            top: 0;
+            right: 0;
+            z-index: 9999;
+        }
+
+        .user-status a {
+            color: white;
+            text-decoration: none;
+            margin-left: 10px;
+        }
+
+        .user-status a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="home-link">
+        <a href="{% url 'home' %}">返回首页</a>
+    </div>
+    <h1>Edit Contact</h1>
+    <form action="{% url 'edit_contact' contact.id %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" value="{{ contact.name }}" required>
+        </div>
+        <div class="form-group">
+            <label for="phone_number">Phone Number:</label>
+            <input type="text" id="phone_number" name="phone_number" value="{{ contact.phone_number }}" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="{{ contact.email }}" required>
+        </div>
+        <input type="submit" value="Save Changes">
+    </form>
+</div>
+{% endblock %}
+
+</body>
+</html>
+

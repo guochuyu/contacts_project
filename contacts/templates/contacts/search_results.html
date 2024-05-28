@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        li {
+            padding: 10px 20px;
+            border-bottom: 1px solid #ccc;
+        }
+        .contact-details {
+            display: none;
+            padding: 10px 20px;
+            background-color: #f9f9f9;
+            border-top: 1px solid #ccc;
+        }
+        li:hover .contact-details {
+            display: block;
+        }
+        .user-status {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            text-align: right;
+            position: fixed;
+            top: 0;
+            right: 0;
+            z-index: 9999;
+        }
+
+        .user-status a {
+            color: white;
+            text-decoration: none;
+            margin-left: 10px;
+        }
+
+        .user-status a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <a href="{% url 'contact_list' %}" class="return-link">Return to Contact List</a>
+    <h1>Search Results</h1>
+    <ul>
+        {% for contact in results %}
+        <li class="contact-item">
+            <strong>{{ contact.name }}</strong> - {{ contact.phone_number }}
+            <div class="contact-details">
+                <p><strong>Name:</strong> {{ contact.name }}</p>
+                <p><strong>Phone Number:</strong> {{ contact.phone_number }}</p>
+                <p><strong>Email:</strong> {{ contact.email }}</p>
+            </div>
+        </li>
+        {% empty %}
+        <li>No results found.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
+</body>
+</html>
+
